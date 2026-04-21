@@ -162,6 +162,10 @@ export default function App() {
         )}
       </main>
 
+      <div className="py-6 text-center text-[11px] tracking-[0.2em] uppercase text-ink-faint">
+        PearlLeeStudio
+      </div>
+
       {phase === "ready" && (
         <footer className="fixed bottom-0 left-0 right-0 px-4 pb-4 pointer-events-none">
           <div className="max-w-reader mx-auto pointer-events-auto">
