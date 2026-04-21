@@ -1,14 +1,28 @@
 import { useEffect, useRef } from "react";
 import type { Sentence } from "../lib/transcribe";
+import { RecordControls } from "./RecordControls";
 
 type Props = {
   sentence: Sentence | null;
   repeatsDone: number;
   repeatCount: number;
   subscribePosition: (fn: (pos: number) => void) => () => void;
+  fileKey: string | null;
+  onPlayOriginal: () => void;
+  onPauseOriginal: () => void;
+  onRecordingsChanged?: () => void;
 };
 
-export function NowReading({ sentence, repeatsDone, repeatCount, subscribePosition }: Props) {
+export function NowReading({
+  sentence,
+  repeatsDone,
+  repeatCount,
+  subscribePosition,
+  fileKey,
+  onPlayOriginal,
+  onPauseOriginal,
+  onRecordingsChanged,
+}: Props) {
   const barRef = useRef<HTMLDivElement | null>(null);
   const wordsRef = useRef<HTMLSpanElement[]>([]);
   const activeWordIdxRef = useRef<number>(-1);
@@ -86,6 +100,18 @@ export function NowReading({ sentence, repeatsDone, repeatCount, subscribePositi
           style={{ transform: "scaleX(0)" }}
         />
       </div>
+
+      {fileKey && (
+        <RecordControls
+          key={`${fileKey}::${sentence.id}`}
+          fileKey={fileKey}
+          sentenceId={sentence.id}
+          onPlayOriginal={onPlayOriginal}
+          onBeforeRecord={onPauseOriginal}
+          onRecorded={onRecordingsChanged}
+          onDeleted={onRecordingsChanged}
+        />
+      )}
     </article>
   );
 }

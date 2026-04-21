@@ -5,6 +5,7 @@ type Props = {
   sentences: Sentence[];
   currentId: number | null;
   onPick: (id: number) => void;
+  recordedIds?: Set<number>;
 };
 
 function fmt(sec: number) {
@@ -13,7 +14,7 @@ function fmt(sec: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-export function SentenceList({ sentences, currentId, onPick }: Props) {
+export function SentenceList({ sentences, currentId, onPick, recordedIds }: Props) {
   const activeRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
@@ -43,11 +44,18 @@ export function SentenceList({ sentences, currentId, onPick }: Props) {
                 {fmt(s.start)}
               </span>
               <span
-                className={`font-reader text-[17px] leading-[1.55]
+                className={`font-reader text-[17px] leading-[1.55] flex-1
                   ${active ? "text-ink" : "text-ink-soft"}`}
               >
                 {s.text}
               </span>
+              {recordedIds?.has(s.id) && (
+                <span
+                  className="shrink-0 inline-block w-1.5 h-1.5 rounded-full bg-amber-400"
+                  title="Recorded"
+                  aria-label="Recorded"
+                />
+              )}
             </button>
           );
         })}

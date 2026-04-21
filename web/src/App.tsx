@@ -6,16 +6,19 @@ import { ControlBar } from "./components/ControlBar";
 import { NowReading } from "./components/NowReading";
 import { decodeAudioFile, transcribe, type Sentence, type TranscribeProgress } from "./lib/transcribe";
 import { useAudioLooper, type LooperOptions } from "./lib/useAudioLooper";
+import { listRecordedIds } from "./lib/recordingStore";
 
 type Phase = "idle" | "decoding" | "transcribing" | "ready" | "error";
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [fileName, setFileName] = useState("");
+  const [fileKey, setFileKey] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [sentences, setSentences] = useState<Sentence[]>([]);
   const [progress, setProgress] = useState<TranscribeProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [recordedIds, setRecordedIds] = useState<Set<number>>(new Set());
   const [options, setOptions] = useState<LooperOptions>({
     repeatCount: 3,
     autoAdvance: true,
@@ -25,6 +28,16 @@ export default function App() {
 
   const looper = useAudioLooper(sentences);
 
+  const refreshRecordedIds = useCallback(async () => {
+    if (!fileKey) return;
+    const ids = await listRecordedIds(fileKey);
+    setRecordedIds(ids);
+  }, [fileKey]);
+
+  useEffect(() => {
+    refreshRecordedIds();
+  }, [refreshRecordedIds]);
+
   useEffect(() => {
     looper.setOptions(options);
   }, [options, looper]);
@@ -32,6 +45,7 @@ export default function App() {
   const handleFile = useCallback(async (file: File) => {
     setError(null);
     setFileName(file.name);
+    setFileKey(`${file.name}::${file.size}::${file.lastModified}`);
     setPhase("decoding");
     setProgress(null);
 
@@ -63,6 +77,8 @@ export default function App() {
     setAudioUrl(null);
     setSentences([]);
     setFileName("");
+    setFileKey(null);
+    setRecordedIds(new Set());
     setProgress(null);
     setError(null);
     setPhase("idle");
@@ -139,12 +155,20 @@ export default function App() {
                 repeatsDone={looper.state.repeatsDone}
                 repeatCount={options.repeatCount}
                 subscribePosition={looper.subscribePosition}
+                fileKey={fileKey}
+                onPlayOriginal={() => {
+                  const id = looper.state.currentId;
+                  if (id != null) looper.playSentence(id, true);
+                }}
+                onPauseOriginal={looper.pause}
+                onRecordingsChanged={refreshRecordedIds}
               />
               <div className="mt-8">
                 <SentenceList
                   sentences={sentences}
                   currentId={looper.state.currentId}
                   onPick={(id) => looper.playSentence(id, true)}
+                  recordedIds={recordedIds}
                 />
               </div>
             </>
