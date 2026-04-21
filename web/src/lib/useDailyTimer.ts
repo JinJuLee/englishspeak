@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export type TimerState =
   | { status: "idle"; date: string }
@@ -55,11 +55,14 @@ export function useDailyTimer() {
     return () => window.clearInterval(id);
   }, [state.date]);
 
-  const elapsedMs = useMemo(() => {
-    if (state.status === "running") return Date.now() - state.sessionStart;
-    if (state.status === "ended") return state.endedAt - state.sessionStart;
-    return 0;
-  }, [state]);
+  // Recomputed every render — forceTick drives a render each second while
+  // running, so the returned value is always fresh.
+  const elapsedMs =
+    state.status === "running"
+      ? Date.now() - state.sessionStart
+      : state.status === "ended"
+      ? state.endedAt - state.sessionStart
+      : 0;
 
   const start = useCallback(() => {
     setState((s) => {
@@ -79,12 +82,11 @@ export function useDailyTimer() {
 }
 
 export function formatElapsed(ms: number) {
-  const totalSec = Math.max(0, Math.floor(ms / 1000));
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = totalSec % 60;
+  const totalMin = Math.max(0, Math.floor(ms / 60000));
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
   const pad = (n: number) => n.toString().padStart(2, "0");
-  return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+  return `${pad(h)}:${pad(m)}`;
 }
 
 export function formatDate(d: Date) {
