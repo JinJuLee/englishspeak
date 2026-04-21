@@ -70,50 +70,87 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      <header className="py-8 px-6 text-center">
-        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">SpeakLoop</h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Upload an mp3 · auto-split into sentences · repeat until it sticks
-        </p>
+      <header className="w-full border-b border-line">
+        <div className="max-w-reader mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-baseline gap-2">
+            <span aria-hidden className="text-base leading-none translate-y-[1px]">🪄</span>
+            <span className="font-reader text-lg text-ink">SpeakLoop</span>
+            <span className="text-[11px] uppercase tracking-widest text-ink-faint">shadowing player</span>
+          </div>
+          {phase === "ready" && fileName && (
+            <span className="text-xs text-ink-muted truncate max-w-[40%]">{fileName}</span>
+          )}
+        </div>
       </header>
 
-      <main className="flex-1 w-full max-w-4xl mx-auto px-6 pb-40 flex flex-col gap-6">
-        {phase === "idle" && <FileDrop onFile={handleFile} />}
+      <main className="flex-1 w-full">
+        <div className="max-w-reader mx-auto px-6 pb-48">
+          {phase === "idle" && (
+            <>
+              <section className="py-16">
+                <h1 className="font-reader text-4xl md:text-5xl text-ink leading-tight mb-4">
+                  <span aria-hidden className="mr-2">🪄</span>
+                  Drill English one sentence at a time.
+                </h1>
+                <p className="text-ink-soft text-lg leading-relaxed max-w-xl">
+                  Drop an mp3. SpeakLoop transcribes it in your browser and turns every
+                  sentence into a loop you can repeat as many times as you want.
+                </p>
+              </section>
+              <FileDrop onFile={handleFile} />
+              <section className="py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-ink-soft">
+                <div>
+                  <div className="text-[11px] uppercase tracking-widest text-ink-muted mb-2">Private</div>
+                  <p>Audio never leaves your browser. No account, no upload.</p>
+                </div>
+                <div>
+                  <div className="text-[11px] uppercase tracking-widest text-ink-muted mb-2">No keys</div>
+                  <p>Whisper runs locally via WebGPU. Nothing to configure.</p>
+                </div>
+                <div>
+                  <div className="text-[11px] uppercase tracking-widest text-ink-muted mb-2">Built for shadowing</div>
+                  <p>Per-sentence repeat, auto-advance, adjustable gap and speed.</p>
+                </div>
+              </section>
+            </>
+          )}
 
-        {(phase === "decoding" || phase === "transcribing") && (
-          <ProgressCard fileName={fileName} phase={phase} progress={progress} />
-        )}
+          {(phase === "decoding" || phase === "transcribing") && (
+            <ProgressCard fileName={fileName} phase={phase} progress={progress} />
+          )}
 
-        {phase === "error" && (
-          <div className="rounded-2xl bg-red-50 border border-red-200 text-red-800 p-6">
-            <div className="font-medium">Something went wrong</div>
-            <div className="text-sm mt-1">{error}</div>
-            <button
-              onClick={reset}
-              className="mt-3 text-sm text-red-700 underline hover:text-red-900"
-            >
-              Try another file
-            </button>
-          </div>
-        )}
+          {phase === "error" && (
+            <div className="py-16">
+              <div className="text-[11px] uppercase tracking-widest text-ink-muted mb-3">Error</div>
+              <div className="font-reader text-xl text-ink mb-4">Something went wrong.</div>
+              <div className="text-sm text-ink-soft mb-6 leading-relaxed">{error}</div>
+              <button
+                onClick={reset}
+                className="text-sm text-ink underline underline-offset-4 hover:text-ink-soft"
+              >
+                Try another file
+              </button>
+            </div>
+          )}
 
-        {phase === "ready" && (
-          <>
-            <NowReading
-              sentence={sentences.find((s) => s.id === looper.state.currentId) ?? null}
-              repeatsDone={looper.state.repeatsDone}
-              repeatCount={options.repeatCount}
-              subscribePosition={looper.subscribePosition}
-            />
-            <SentenceList
-              sentences={sentences}
-              currentId={looper.state.currentId}
-              repeatsDone={looper.state.repeatsDone}
-              repeatCount={options.repeatCount}
-              onPick={(id) => looper.playSentence(id, true)}
-            />
-          </>
-        )}
+          {phase === "ready" && (
+            <>
+              <NowReading
+                sentence={sentences.find((s) => s.id === looper.state.currentId) ?? null}
+                repeatsDone={looper.state.repeatsDone}
+                repeatCount={options.repeatCount}
+                subscribePosition={looper.subscribePosition}
+              />
+              <div className="mt-8">
+                <SentenceList
+                  sentences={sentences}
+                  currentId={looper.state.currentId}
+                  onPick={(id) => looper.playSentence(id, true)}
+                />
+              </div>
+            </>
+          )}
+        </div>
 
         {audioUrl && (
           <audio
@@ -126,8 +163,8 @@ export default function App() {
       </main>
 
       {phase === "ready" && (
-        <footer className="fixed bottom-0 left-0 right-0 p-4 pointer-events-none">
-          <div className="max-w-4xl mx-auto pointer-events-auto">
+        <footer className="fixed bottom-0 left-0 right-0 px-4 pb-4 pointer-events-none">
+          <div className="max-w-reader mx-auto pointer-events-auto">
             <ControlBar
               playing={looper.state.playing}
               options={options}

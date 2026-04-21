@@ -13,7 +13,6 @@ export function NowReading({ sentence, repeatsDone, repeatCount, subscribePositi
   const wordsRef = useRef<HTMLSpanElement[]>([]);
   const activeWordIdxRef = useRef<number>(-1);
 
-  // Word list cached per sentence
   const words = sentence
     ? sentence.text.split(/(\s+)/).filter((w) => w.trim().length > 0)
     : [];
@@ -30,8 +29,6 @@ export function NowReading({ sentence, repeatsDone, repeatCount, subscribePositi
       if (barRef.current) {
         barRef.current.style.transform = `scaleX(${pct / 100})`;
       }
-
-      // word highlight: estimate by proportional progress across words
       if (words.length > 0) {
         const idx = Math.min(
           Math.floor((local / duration) * words.length),
@@ -51,44 +48,44 @@ export function NowReading({ sentence, repeatsDone, repeatCount, subscribePositi
 
   if (!sentence) {
     return (
-      <div className="w-full rounded-2xl bg-white border border-gray-200 p-10 text-center text-gray-400">
-        Pick a sentence below to start
+      <div className="w-full py-20 text-center text-ink-faint font-reader text-lg italic">
+        Select a sentence below to begin
       </div>
     );
   }
 
   return (
-    <div className="w-full rounded-2xl bg-white border border-gray-200 p-8 shadow-sm">
-      <div className="flex items-center justify-between mb-4 text-xs uppercase tracking-wide font-semibold text-gray-500">
-        <span>Now reading · Sentence {sentence.id + 1}</span>
-        <span className="text-accent tabular-nums">
+    <article className="w-full py-10">
+      <div className="flex items-baseline justify-between mb-5 text-[11px] uppercase tracking-[0.18em] text-ink-muted">
+        <span>Sentence {sentence.id + 1}</span>
+        <span className="tabular-nums">
           {repeatCount === 0
-            ? `${repeatsDone}/∞`
-            : `${Math.min(repeatsDone, repeatCount)}/${repeatCount}`}
+            ? `${repeatsDone} / ∞`
+            : `${Math.min(repeatsDone, repeatCount)} / ${repeatCount}`}
         </span>
       </div>
 
-      <p className="text-2xl md:text-3xl leading-snug text-gray-900 font-medium">
+      <p className="font-reader text-[30px] md:text-[34px] leading-[1.45] text-ink">
         {words.map((w, i) => (
           <span
             key={i}
             ref={(el) => {
               if (el) wordsRef.current[i] = el;
             }}
-            className="word inline-block mr-[0.35em] transition-colors"
+            className="word inline-block mr-[0.3em]"
           >
             {w}
           </span>
         ))}
       </p>
 
-      <div className="mt-6 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+      <div className="mt-10 h-px w-full bg-line relative overflow-hidden">
         <div
           ref={barRef}
-          className="h-full w-full bg-accent origin-left"
+          className="h-px w-full bg-ink origin-left"
           style={{ transform: "scaleX(0)" }}
         />
       </div>
-    </div>
+    </article>
   );
 }

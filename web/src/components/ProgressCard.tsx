@@ -13,31 +13,32 @@ export function ProgressCard({ fileName, phase, progress }: Props) {
       : null;
   const label =
     phase === "decoding"
-      ? "Decoding audio…"
+      ? "Decoding audio"
       : progress?.stage === "download"
-      ? `Downloading Whisper model${progress.message ? ` · ${progress.message}` : ""}`
+      ? `Downloading model${progress.message ? ` · ${progress.message}` : ""}`
       : progress?.stage === "ready"
-      ? "Model loaded, transcribing…"
+      ? "Model loaded"
       : progress?.stage === "transcribe"
-      ? "Transcribing audio…"
-      : "Preparing model…";
+      ? "Transcribing"
+      : "Preparing";
 
   return (
-    <div className="w-full rounded-2xl bg-white border border-gray-200 p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-3">
-        <div className="font-medium text-gray-900 truncate">{fileName}</div>
-        {pct !== null && <div className="text-sm text-gray-500 tabular-nums">{pct}%</div>}
-      </div>
-      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+    <div className="w-full py-10">
+      <div className="text-xs uppercase tracking-widest text-ink-muted mb-3">{label}</div>
+      <div className="font-reader text-xl text-ink truncate mb-6">{fileName}</div>
+      <div className="h-px w-full bg-line relative overflow-hidden">
         <div
-          className="h-full bg-accent transition-all"
+          className="h-px bg-ink transition-all duration-500"
           style={{ width: pct !== null ? `${pct}%` : "30%" }}
         />
       </div>
-      <div className="text-sm text-gray-600 mt-3">{label}</div>
+      <div className="flex justify-between mt-3 text-xs text-ink-muted tabular-nums">
+        <span>{phase === "decoding" ? "" : progress?.stage === "transcribe" ? "running in browser" : ""}</span>
+        {pct !== null && <span>{pct}%</span>}
+      </div>
       {phase === "transcribing" && progress?.stage === "download" && (
-        <div className="text-xs text-gray-400 mt-2">
-          First run downloads ~150MB model. It's cached in the browser for next time.
+        <div className="text-xs text-ink-faint mt-6 leading-relaxed">
+          First run downloads ~150&nbsp;MB of Whisper weights. It stays cached for next time.
         </div>
       )}
     </div>

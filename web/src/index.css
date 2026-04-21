@@ -2,32 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ink: #1a1a1a;
+  --ink-soft: #444;
+  --ink-muted: #6b7280;
+  --line: #ececec;
+  --page: #ffffff;
+  --accent: #111111;
+}
+
 html, body, #root {
   height: 100%;
   margin: 0;
-  background: #fafafa;
+  background: var(--page);
+  color: var(--ink);
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  color: #1a1a1a;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.003em;
+}
+
+.font-reader {
+  font-family: "Iowan Old Style", "Charter", "Georgia", "Times New Roman", serif;
+  letter-spacing: -0.003em;
 }
 
 .reader-scroll {
   scrollbar-width: thin;
-  scrollbar-color: #d1d5db transparent;
+  scrollbar-color: #d4d4d4 transparent;
 }
-.reader-scroll::-webkit-scrollbar { width: 8px; }
-.reader-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+.reader-scroll::-webkit-scrollbar { width: 6px; }
+.reader-scroll::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
 
-/* Word-level highlight inside NowReading */
 .word {
-  color: #4b5563;
+  color: var(--ink-soft);
+  transition: color 120ms ease;
 }
 .word-active {
-  color: #2563eb;
-  background: #dbeafe;
-  border-radius: 4px;
-  padding: 0 4px;
+  color: var(--ink);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: inset 0 -0.4em 0 rgba(17, 17, 17, 0.08);
+}
+
+/* subtle focus rings */
+button:focus-visible,
+input:focus-visible,
+label:focus-visible {
+  outline: 1px solid rgba(17, 17, 17, 0.2);
+  outline-offset: 2px;
 }
