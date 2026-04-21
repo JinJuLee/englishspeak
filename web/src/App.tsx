@@ -4,6 +4,7 @@ import { ProgressCard } from "./components/ProgressCard";
 import { SentenceList } from "./components/SentenceList";
 import { ControlBar } from "./components/ControlBar";
 import { NowReading } from "./components/NowReading";
+import { DailyTimer } from "./components/DailyTimer";
 import { decodeAudioFile, transcribe, type Sentence, type TranscribeProgress } from "./lib/transcribe";
 import { useAudioLooper, type LooperOptions } from "./lib/useAudioLooper";
 import { listRecordedIds } from "./lib/recordingStore";
@@ -98,6 +99,7 @@ export default function App() {
           )}
         </div>
       </header>
+      <DailyTimer />
 
       <main className="flex-1 w-full">
         <div className="max-w-reader mx-auto px-6 pb-48">
