@@ -89,7 +89,6 @@ export default function App() {
             <>
               <section className="py-16">
                 <h1 className="font-reader text-4xl md:text-5xl text-ink leading-tight mb-4">
-                  <span aria-hidden className="mr-2">🪄</span>
                   Drill English one sentence at a time.
                 </h1>
                 <p className="text-ink-soft text-lg leading-relaxed max-w-xl">
