@@ -32,8 +32,8 @@ export function FileDrop({ onFile }: Props) {
         setDrag(false);
         handle(e.dataTransfer.files);
       }}
-      className={`flex flex-col items-center justify-center w-full cursor-pointer transition-colors px-8 py-24 text-center border-t border-b
-        ${drag ? "border-ink/40 bg-ink/[0.02]" : "border-line hover:bg-ink/[0.015]"}`}
+      className={`flex flex-col items-center justify-center w-full cursor-pointer transition-colors rounded-2xl border-2 border-dashed px-8 py-20 text-center
+        ${drag ? "border-ink/50 bg-ink/[0.03]" : "border-line hover:border-ink/30 hover:bg-ink/[0.015]"}`}
     >
       <input
         type="file"
@@ -41,6 +41,7 @@ export function FileDrop({ onFile }: Props) {
         className="hidden"
         onChange={(e) => handle(e.target.files)}
       />
+      <div className="text-5xl mb-5" aria-hidden>🎧</div>
       <div className="font-reader text-2xl text-ink mb-2">Drop an audio file</div>
       <div className="text-sm text-ink-muted max-w-sm">
         mp3, m4a, wav · transcribed locally with Whisper · your audio never leaves the browser
