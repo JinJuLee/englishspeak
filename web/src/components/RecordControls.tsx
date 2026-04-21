@@ -6,6 +6,7 @@ type Props = {
   fileKey: string;
   sentenceId: number;
   onPlayOriginal: () => void;
+  onPlayOriginalOnce: () => Promise<void>;
   onBeforeRecord?: () => void;
   onRecorded?: () => void;
   onDeleted?: () => void;
@@ -15,6 +16,7 @@ export function RecordControls({
   fileKey,
   sentenceId,
   onPlayOriginal,
+  onPlayOriginalOnce,
   onBeforeRecord,
   onRecorded,
   onDeleted,
@@ -22,8 +24,10 @@ export function RecordControls({
   const { status, elapsed, error, start, stop } = useRecorder();
   const [hasRecording, setHasRecording] = useState(false);
   const [playingMine, setPlayingMine] = useState(false);
+  const [playingAB, setPlayingAB] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const urlRef = useRef<string | null>(null);
+  const abAbortRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -67,7 +71,7 @@ export function RecordControls({
     onPlayOriginal();
   }, [onPlayOriginal, stopMine]);
 
-  const playMine = useCallback(async () => {
+  const playMineBlob = useCallback(async (): Promise<void> => {
     const row = await getRecording(fileKey, sentenceId);
     if (!row) return;
     if (urlRef.current) URL.revokeObjectURL(urlRef.current);
@@ -75,12 +79,41 @@ export function RecordControls({
     urlRef.current = url;
     const audio = new Audio(url);
     audioRef.current = audio;
+    return new Promise<void>((resolve) => {
+      audio.onended = () => resolve();
+      audio.onerror = () => resolve();
+      audio.onpause = () => resolve();
+      audio.play().catch(() => resolve());
+    });
+  }, [fileKey, sentenceId]);
+
+  const playMine = useCallback(async () => {
     onBeforeRecord?.();
     setPlayingMine(true);
-    audio.onended = () => setPlayingMine(false);
-    audio.onerror = () => setPlayingMine(false);
-    audio.play().catch(() => setPlayingMine(false));
-  }, [fileKey, onBeforeRecord, sentenceId]);
+    await playMineBlob();
+    setPlayingMine(false);
+  }, [onBeforeRecord, playMineBlob]);
+
+  const playAB = useCallback(async () => {
+    if (playingAB) {
+      // toggle off: stop current playback
+      abAbortRef.current = true;
+      audioRef.current?.pause();
+      return;
+    }
+    abAbortRef.current = false;
+    setPlayingAB(true);
+    try {
+      await onPlayOriginalOnce();
+      if (abAbortRef.current) return;
+      await new Promise((r) => setTimeout(r, 350));
+      if (abAbortRef.current) return;
+      await playMineBlob();
+    } finally {
+      setPlayingAB(false);
+      setPlayingMine(false);
+    }
+  }, [onPlayOriginalOnce, playMineBlob, playingAB]);
 
   const removeMine = useCallback(async () => {
     await deleteRecording(fileKey, sentenceId);
@@ -130,6 +163,14 @@ export function RecordControls({
               Mine
             </ActionButton>
           )}
+          <ActionButton
+            onClick={playAB}
+            label={playingAB ? "Stop A/B" : "Play original then yours"}
+            tone="amber"
+          >
+            {playingAB ? <StopIcon /> : <PlayIcon />}
+            A / B
+          </ActionButton>
           <button
             onClick={removeMine}
             className="text-xs text-ink-faint hover:text-ink-soft px-2"

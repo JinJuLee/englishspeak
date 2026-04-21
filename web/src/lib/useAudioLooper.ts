@@ -20,6 +20,7 @@ export function useAudioLooper(sentences: Sentence[]) {
   const gapTimerRef = useRef<number | null>(null);
   const positionRef = useRef(0);
   const positionListenersRef = useRef<Set<(pos: number) => void>>(new Set());
+  const oneShotResolveRef = useRef<null | (() => void)>(null);
 
   const optsRef = useRef<LooperOptions>({
     repeatCount: 3,
@@ -77,10 +78,19 @@ export function useAudioLooper(sentences: Sentence[]) {
   const getSentence = (id: number | null) =>
     id == null ? null : sentencesRef.current.find((s) => s.id === id) ?? null;
 
+  const resolveOneShot = () => {
+    if (oneShotResolveRef.current) {
+      const r = oneShotResolveRef.current;
+      oneShotResolveRef.current = null;
+      r();
+    }
+  };
+
   const pause = useCallback(() => {
     const audio = audioRef.current;
     if (audio) audio.pause();
     clearGap();
+    resolveOneShot();
     setState((s) => ({ ...s, playing: false }));
   }, []);
 
@@ -89,6 +99,7 @@ export function useAudioLooper(sentences: Sentence[]) {
     const s = getSentence(id);
     if (!audio || !s) return;
     clearGap();
+    resolveOneShot();
     audio.currentTime = s.start;
     audio.playbackRate = optsRef.current.speed;
     audio.play().catch(() => {});
@@ -100,6 +111,33 @@ export function useAudioLooper(sentences: Sentence[]) {
       currentId: id,
       repeatsDone: resetRepeats ? 0 : prev.repeatsDone,
     }));
+  }, []);
+
+  const playSentenceOnce = useCallback((id: number): Promise<void> => {
+    return new Promise((resolve) => {
+      const audio = audioRef.current;
+      const s = getSentence(id);
+      if (!audio || !s) {
+        resolve();
+        return;
+      }
+      clearGap();
+      resolveOneShot();
+      oneShotResolveRef.current = resolve;
+      audio.currentTime = s.start;
+      audio.playbackRate = optsRef.current.speed;
+      audio.play().catch(() => {
+        resolveOneShot();
+      });
+      positionRef.current = s.start;
+      positionListenersRef.current.forEach((fn) => fn(s.start));
+      setState((prev) => ({
+        ...prev,
+        playing: true,
+        currentId: id,
+        repeatsDone: 0,
+      }));
+    });
   }, []);
 
   const onEndOfSentence = useCallback(() => {
@@ -147,7 +185,13 @@ export function useAudioLooper(sentences: Sentence[]) {
         positionRef.current = pos;
         positionListenersRef.current.forEach((fn) => fn(pos));
         if (pos >= cur.end) {
-          onEndOfSentence();
+          if (oneShotResolveRef.current) {
+            audio.pause();
+            setState((st) => ({ ...st, playing: false }));
+            resolveOneShot();
+          } else {
+            onEndOfSentence();
+          }
         }
       }
     }
@@ -194,6 +238,7 @@ export function useAudioLooper(sentences: Sentence[]) {
     play,
     pause,
     playSentence,
+    playSentenceOnce,
     next,
     prev,
   };

@@ -9,6 +9,7 @@ type Props = {
   subscribePosition: (fn: (pos: number) => void) => () => void;
   fileKey: string | null;
   onPlayOriginal: () => void;
+  onPlayOriginalOnce: () => Promise<void>;
   onPauseOriginal: () => void;
   onRecordingsChanged?: () => void;
 };
@@ -20,6 +21,7 @@ export function NowReading({
   subscribePosition,
   fileKey,
   onPlayOriginal,
+  onPlayOriginalOnce,
   onPauseOriginal,
   onRecordingsChanged,
 }: Props) {
@@ -107,6 +109,7 @@ export function NowReading({
           fileKey={fileKey}
           sentenceId={sentence.id}
           onPlayOriginal={onPlayOriginal}
+          onPlayOriginalOnce={onPlayOriginalOnce}
           onBeforeRecord={onPauseOriginal}
           onRecorded={onRecordingsChanged}
           onDeleted={onRecordingsChanged}

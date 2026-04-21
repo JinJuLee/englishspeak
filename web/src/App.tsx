@@ -160,6 +160,10 @@ export default function App() {
                   const id = looper.state.currentId;
                   if (id != null) looper.playSentence(id, true);
                 }}
+                onPlayOriginalOnce={() => {
+                  const id = looper.state.currentId;
+                  return id != null ? looper.playSentenceOnce(id) : Promise.resolve();
+                }}
                 onPauseOriginal={looper.pause}
                 onRecordingsChanged={refreshRecordedIds}
               />
