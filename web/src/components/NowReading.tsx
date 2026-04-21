@@ -79,10 +79,10 @@ export function NowReading({ sentence, repeatsDone, repeatCount, subscribePositi
         ))}
       </p>
 
-      <div className="mt-10 h-px w-full bg-line relative overflow-hidden">
+      <div className="mt-10 h-[3px] w-full bg-line relative overflow-hidden rounded-full">
         <div
           ref={barRef}
-          className="h-px w-full bg-ink origin-left"
+          className="h-full w-full bg-amber-400 origin-left rounded-full"
           style={{ transform: "scaleX(0)" }}
         />
       </div>

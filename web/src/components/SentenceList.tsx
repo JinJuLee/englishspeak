@@ -33,12 +33,12 @@ export function SentenceList({ sentences, currentId, onPick }: Props) {
               key={s.id}
               ref={active ? activeRef : null}
               onClick={() => onPick(s.id)}
-              className={`group w-full text-left px-2 py-3 flex items-baseline gap-4 transition-colors
-                ${active ? "bg-ink/[0.03]" : "hover:bg-ink/[0.02]"}`}
+              className={`group w-full text-left px-3 py-3 flex items-baseline gap-4 transition-colors border-l-2
+                ${active ? "bg-amber-50 border-amber-400" : "border-transparent hover:bg-ink/[0.02]"}`}
             >
               <span
                 className={`text-xs tabular-nums w-10 shrink-0 pt-0.5
-                  ${active ? "text-ink" : "text-ink-faint group-hover:text-ink-muted"}`}
+                  ${active ? "text-amber-700 font-semibold" : "text-ink-faint group-hover:text-ink-muted"}`}
               >
                 {fmt(s.start)}
               </span>

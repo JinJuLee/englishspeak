@@ -26,9 +26,9 @@ export function ProgressCard({ fileName, phase, progress }: Props) {
     <div className="w-full py-10">
       <div className="text-xs uppercase tracking-widest text-ink-muted mb-3">{label}</div>
       <div className="font-reader text-xl text-ink truncate mb-6">{fileName}</div>
-      <div className="h-px w-full bg-line relative overflow-hidden">
+      <div className="h-[3px] w-full bg-line relative overflow-hidden rounded-full">
         <div
-          className="h-px bg-ink transition-all duration-500"
+          className="h-full bg-amber-400 transition-all duration-500 rounded-full"
           style={{ width: pct !== null ? `${pct}%` : "30%" }}
         />
       </div>
