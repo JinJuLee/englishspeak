@@ -4,6 +4,8 @@
 
 [한국어 README](./README.ko.md)
 
+![SpeakLoop](./docs/screenshot.png)
+
 A browser-only shadowing player for mp3 audio. Inspired by Natural Reader and Speechify, but with one feature they don't have: **per-sentence repeat counts with auto-advance**, so you can drill a sentence 5 times and move on without touching the mouse.
 
 ## What it's good for

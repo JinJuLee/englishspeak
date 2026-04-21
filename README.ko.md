@@ -2,6 +2,8 @@
 
 > mp3 하나 던지면 자동으로 문장별로 쪼개고, 원하는 횟수만큼 반복해주는 브라우저 영어 스피킹 연습기. API 키도, 계정도, 서버도 필요 없음.
 
+![SpeakLoop](./docs/screenshot.png)
+
 브라우저에서 돌아가는 mp3 섀도잉 플레이어. Natural Reader랑 Speechify 느낌인데 저 둘에 없는 기능이 하나 있습니다: **문장별 반복 횟수 지정 + 자동 넘어가기** — 한 문장 5번 돌리고 마우스 안 건드려도 다음 문장으로 넘어갑니다.
 
 [English version](./README.md)
