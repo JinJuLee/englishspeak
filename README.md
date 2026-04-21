@@ -1,6 +1,8 @@
-# SpeakLoop
+# SpeakLoop 🪄
 
 > Drop an mp3, auto-split into sentences, loop each one N times. Browser-based English speaking practice — no API key, no account, no server.
+
+[한국어 README](./README.ko.md)
 
 Built for OPIc / TOEFL / interview shadowing. Inspired by Natural Reader and Speechify, but with one feature they don't have: **per-sentence repeat counts with auto-advance**, so you can drill a sentence 5 times and move on without touching the mouse.
 
