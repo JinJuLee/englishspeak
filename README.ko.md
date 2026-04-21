@@ -2,17 +2,20 @@
 
 > mp3 하나 던지면 자동으로 문장별로 쪼개고, 원하는 횟수만큼 반복해주는 브라우저 영어 스피킹 연습기. API 키도, 계정도, 서버도 필요 없음.
 
-오픽 / 토플 / 면접 섀도잉을 위해 만들었어요. Natural Reader랑 Speechify 느낌인데 저 둘에 없는 기능이 하나 있습니다: **문장별 반복 횟수 지정 + 자동 넘어가기** — 한 문장 5번 돌리고 마우스 안 건드려도 다음 문장으로 넘어갑니다.
+브라우저에서 돌아가는 mp3 섀도잉 플레이어. Natural Reader랑 Speechify 느낌인데 저 둘에 없는 기능이 하나 있습니다: **문장별 반복 횟수 지정 + 자동 넘어가기** — 한 문장 5번 돌리고 마우스 안 건드려도 다음 문장으로 넘어갑니다.
 
 [English version](./README.md)
 
-## 왜 만들었나
+## 이런 용도에 좋아요
 
-대부분의 영어 스피킹 연습 흐름은 둘 중 하나를 강요해요:
-- Apple Music / Spotify 사용 → 내 음악이랑 섞여 버림
-- 스크립트 한 줄 바꿀 때마다 TTS 크레딧 소비
+mp3로 들고 올 수 있는 건 전부 섀도잉 드릴로 바뀝니다:
 
-SpeakLoop은 그 사이의 빠진 플레이어예요. 이미 갖고 있는 mp3(ElevenLabs, 교재, 보이스 메모 뭐든)를 섀도잉 도구로 만들어줍니다. 전사는 브라우저 안에서 [Whisper](https://openai.com/research/whisper)가 [🤗 Transformers.js](https://github.com/huggingface/transformers.js) 위에서 돌아요 — 외부로 나가는 데이터 0.
+- **오픽 / 토플 스피킹 연습** — 답변을 녹음하거나 TTS로 뽑아서, 문장별로 입에 붙을 때까지 반복
+- **면접 답변** — 외워둔 답변을 한 문장씩 드릴
+- **교재 / 팟캐스트 발췌** — 짧은 구간을 올려서 문장 단위로 섀도잉
+- **TTS 결과물** (ElevenLabs, OpenAI TTS, Edge TTS 등) — 쓴 스크립트를 반복 재생 가능한 연습 트랙으로
+
+전사는 브라우저 안에서 [Whisper](https://openai.com/research/whisper)가 [🤗 Transformers.js](https://github.com/huggingface/transformers.js) 위에서 돌아요 — 오디오가 탭 밖으로 나가지 않습니다.
 
 ## 기능
 

@@ -4,15 +4,18 @@
 
 [한국어 README](./README.ko.md)
 
-Built for OPIc / TOEFL / interview shadowing. Inspired by Natural Reader and Speechify, but with one feature they don't have: **per-sentence repeat counts with auto-advance**, so you can drill a sentence 5 times and move on without touching the mouse.
+A browser-only shadowing player for mp3 audio. Inspired by Natural Reader and Speechify, but with one feature they don't have: **per-sentence repeat counts with auto-advance**, so you can drill a sentence 5 times and move on without touching the mouse.
 
-## Why it exists
+## What it's good for
 
-Most English practice workflows force you to either:
-- Use Apple Music / Spotify (which mixes practice audio with your music library), or
-- Pay for TTS credits every time you change a single word in your script
+Anything you can hand to it as an mp3 becomes a shadowing drill:
 
-SpeakLoop is the missing player: you bring your own mp3 (ElevenLabs, textbook audio, a voice memo — anything) and it becomes a shadowing tool. Transcription happens locally in your browser via [Whisper](https://openai.com/research/whisper) running on [🤗 Transformers.js](https://github.com/huggingface/transformers.js).
+- **OPIc / TOEFL speaking practice** — record or generate your answer, then loop each sentence until it's automatic
+- **Interview answers** — drill memorized responses one sentence at a time
+- **Textbook / podcast excerpts** — paste a clip in and shadow through it
+- **TTS output** (ElevenLabs, OpenAI TTS, Edge TTS, etc.) — turn a script you wrote into a loopable practice track
+
+Transcription happens locally in your browser via [Whisper](https://openai.com/research/whisper) running on [🤗 Transformers.js](https://github.com/huggingface/transformers.js), so your audio never leaves the tab.
 
 ## Features
 
