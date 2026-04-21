@@ -25,6 +25,8 @@ Transcription happens locally in your browser via [Whisper](https://openai.com/r
 - **Per-sentence repeat** — 1× / 2× / 3× / 5× / 10× / ∞ in one click.
 - **Auto-advance** — after N repeats, move to the next sentence automatically.
 - **Now Reading panel** — current sentence displayed large with progress bar and word highlight.
+- **Record & A/B compare** — capture your take per sentence and play it back against the original; recordings persist in IndexedDB.
+- **Daily timer** — once-a-day study timer pinned below the header. Live HH:MM counter while running; once you end today's session it stays locked until local midnight so tomorrow feels like a fresh start.
 - **Speed & gap control** — 0.5×–2× speed, 0–2s silence between repeats for shadowing.
 - **100% local** — audio never leaves your machine. No backend, no API key.
 - **WebGPU accelerated** — 5–10× faster than CPU on Apple Silicon and modern GPUs.
@@ -50,10 +52,12 @@ First mp3 upload downloads the Whisper-base model (~150MB). Chrome caches it in 
 
 ## How to use
 
-1. Drop an mp3 on the page (or click to browse).
-2. Wait for transcription (seconds to a minute depending on audio length).
-3. Click any sentence to loop it.
-4. Use the bottom bar to set repeat count, speed, and gap length.
+1. Hit **Start today's session** in the top bar — the daily timer begins ticking and won't reset until local midnight.
+2. Drop an mp3 on the page (or click to browse).
+3. Wait for transcription (seconds to a minute depending on audio length).
+4. Click any sentence to loop it. Tap the mic to record yourself and A/B against the original.
+5. Use the bottom bar to set repeat count, speed, and gap length.
+6. Hit **End** when you're done — the timer locks for the rest of the day.
 
 Typical shadowing loop: set repeat to 3×, speed to 0.75×, enable auto-advance. Play the whole script back hands-free.
 
