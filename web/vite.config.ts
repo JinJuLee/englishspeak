@@ -5,9 +5,15 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['@xenova/transformers'],
+    exclude: ['@huggingface/transformers', 'onnxruntime-web'],
   },
   worker: {
     format: 'es',
+  },
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'credentialless',
+    },
   },
 })

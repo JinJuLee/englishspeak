@@ -12,7 +12,7 @@ export type TranscribeProgress =
   | { stage: "transcribe"; progress: number }
   | { stage: "ready" };
 
-const DEFAULT_MODEL = "Xenova/whisper-base";
+const DEFAULT_MODEL = "onnx-community/whisper-base";
 
 let worker: Worker | null = null;
 

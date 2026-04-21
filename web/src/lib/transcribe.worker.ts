@@ -1,5 +1,5 @@
 /// <reference lib="webworker" />
-import { pipeline, env } from "@xenova/transformers";
+import { pipeline, env } from "@huggingface/transformers";
 
 env.allowLocalModels = false;
 env.useBrowserCache = true;
@@ -41,6 +41,13 @@ async function ensureModel(model: string) {
   post({ type: "progress", stage: "download", progress: 0, message: "connecting…" });
 
   transcriber = await pipeline("automatic-speech-recognition", model, {
+    // q8 is the stable quantization format for v3. Falls back per-file if
+    // a given submodule isn't available in that dtype.
+    dtype: {
+      encoder_model: "fp32",
+      decoder_model_merged: "q4",
+    },
+    device: "webgpu",
     progress_callback: (p: {
       status?: string;
       file?: string;
