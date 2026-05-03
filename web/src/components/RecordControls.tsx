@@ -126,7 +126,7 @@ export function RecordControls({
       <ActionButton
         onClick={playOriginalAndStopMine}
         label="Original"
-        disabled={status === "recording"}
+        disabled={status === "recording" || status === "warming" || status === "requesting"}
       >
         <PlayIcon />
         Original
@@ -136,6 +136,11 @@ export function RecordControls({
         <ActionButton primary onClick={handleRecord} label="Stop recording" tone="red">
           <StopIcon />
           <span className="tabular-nums">{elapsed.toFixed(1)}s</span>
+        </ActionButton>
+      ) : status === "warming" ? (
+        <ActionButton primary disabled onClick={() => {}} label="Getting ready" tone="amber">
+          <MicIcon />
+          <span className="animate-pulse">Get ready…</span>
         </ActionButton>
       ) : (
         <ActionButton
@@ -150,7 +155,7 @@ export function RecordControls({
         </ActionButton>
       )}
 
-      {hasRecording && status !== "recording" && (
+      {hasRecording && status !== "recording" && status !== "warming" && status !== "requesting" && (
         <>
           {playingMine ? (
             <ActionButton onClick={stopMine} label="Stop mine">
